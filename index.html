@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluxo Operacional — Jandira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --brand: #00049E;
+      --white: #FFFFFF;
+      --gray: #767171;
+      /* every "accent" in the page now points to the single brand blue */
+      --navy: #00049E;
+      --navy-bg: rgba(0, 4, 158, .07);
+      --green: #00049E;
+      --green-bg: rgba(0, 4, 158, .07);
+      --purple: #00049E;
+      --purple-bg: rgba(0, 4, 158, .07);
+      --red: #00049E;
+      --red-bg: rgba(118, 113, 113, .12);
+      --amber: #00049E;
+      --amber-bg: rgba(118, 113, 113, .12);
+      --paper: #FFFFFF;
+      --panel: #FFFFFF;
+      --rail: rgba(0, 4, 158, .035);
+      --ink: #00049E;
+      --muted: #767171;
+      --line: rgba(118, 113, 113, .28);
+      --line-strong: rgba(118, 113, 113, .5);
+      --shadow: 0 1px 2px rgba(118, 113, 113, .16), 0 8px 24px rgba(118, 113, 113, .14);
+      --solid-bg: #00049E;
+      --solid-ink: #FFFFFF;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --paper: #00049E;
+        --panel: rgba(255, 255, 255, .06);
+        --rail: rgba(255, 255, 255, .04);
+        --ink: #FFFFFF;
+        --muted: rgba(255, 255, 255, .72);
+        --line: rgba(255, 255, 255, .18);
+        --line-strong: rgba(255, 255, 255, .32);
+        --navy: #FFFFFF;
+        --green: #FFFFFF;
+        --purple: #FFFFFF;
+        --red: #FFFFFF;
+        --amber: #FFFFFF;
+        --navy-bg: rgba(255, 255, 255, .09);
+        --green-bg: rgba(255, 255, 255, .09);
+        --purple-bg: rgba(255, 255, 255, .09);
+        --red-bg: rgba(255, 255, 255, .12);
+        --amber-bg: rgba(255, 255, 255, .12);
+        --shadow: 0 1px 2px rgba(0, 0, 0, .25), 0 8px 24px rgba(0, 0, 0, .3);
+        --solid-bg: #FFFFFF;
+        --solid-ink: #00049E;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --paper: #00049E;
+      --panel: rgba(255, 255, 255, .06);
+      --rail: rgba(255, 255, 255, .04);
+      --ink: #FFFFFF;
+      --muted: rgba(255, 255, 255, .72);
+      --line: rgba(255, 255, 255, .18);
+      --line-strong: rgba(255, 255, 255, .32);
+      --navy: #FFFFFF;
+      --green: #FFFFFF;
+      --purple: #FFFFFF;
+      --red: #FFFFFF;
+      --amber: #FFFFFF;
+      --navy-bg: rgba(255, 255, 255, .09);
+      --green-bg: rgba(255, 255, 255, .09);
+      --purple-bg: rgba(255, 255, 255, .09);
+      --red-bg: rgba(255, 255, 255, .12);
+      --amber-bg: rgba(255, 255, 255, .12);
+      --shadow: 0 1px 2px rgba(0, 0, 0, .25), 0 8px 24px rgba(0, 0, 0, .3);
+      --solid-bg: #FFFFFF;
+      --solid-ink: #00049E;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+     .step-imgs img {
+      max-height: 180px;
+      max-width: min(100%, 420px);
+      height: auto;
+      object-fit: contain
+    }
+    .step-imgs img {
+      height: 125px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      cursor: zoom-in;
+      background: #fff;
+      box-shadow: var(--shadow);
+      transition: transform .15s;
+    }
+    .step-imgs img.tall {
+      height: 250px;
+    }
+     
+    .step-imgs img {
+      height: 125px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      cursor: zoom-in;
+      background: #fff;
+      box-shadow: var(--shadow);
+      transition: transform .15s;
+    }
+.step-imgs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+.step-imgs img.tall {
+      height: 250px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Public Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0 0 .7em;
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px clamp(16px, 3vw, 34px);
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stamp {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--navy);
+      transform: rotate(-8deg);
+    }
+
+    .brand-text h1 {
+      font-size: 17px;
+      letter-spacing: .2px;
+    }
+
+    .brand-text span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-btn {
+      border: 1px solid var(--line-strong);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--navy);
+    }
+
+    /* ---------- Layout: dossier rail + panel ---------- */
+    .shell {
+      display: flex;
+      max-width: 1180px;
+      margin: 0 auto;
+      min-height: calc(100vh - 64px);
+    }
+
+    nav.rail {
+      width: 250px;
+      flex: none;
+      padding: 22px 0 40px;
+      background: var(--rail);
+      border-right: 1px solid var(--line);
+    }
+
+    .rail-group-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      padding: 14px 22px 6px;
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: calc(100% - 14px);
+      padding: 10px 14px;
+      margin: 2px 0 2px 14px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14.5px;
+      color: var(--ink);
+      border-radius: 9px 0 0 9px;
+      position: relative;
+    }
+
+    .tab .ico {
+      font-size: 15px;
+      flex: none;
+      width: 20px;
+      text-align: center;
+      filter: grayscale(1);
+      opacity: .55;
+    }
+
+    .tab:hover {
+      background: var(--panel);
+    }
+
+    .tab.active {
+      background: var(--panel);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transform: translateX(4px);
+    }
+
+    .tab.active .ico {
+      opacity: 1;
+      filter: none;
+    }
+
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--brand);
+    }
+
+    main.panel {
+      flex: 1;
+      min-width: 0;
+      padding: clamp(20px, 4vw, 46px);
+    }
+
+    section.page {
+      display: none;
+      animation: fade .25s ease;
+    }
+
+    section.page.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-head {
+      margin-bottom: 22px;
+    }
+
+    .kicker {
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--accent, var(--navy));
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .page-head h2 {
+      font-size: clamp(24px, 3vw, 32px);
+      color: var(--ink);
+    }
+
+    .page-head .sub {
+      color: var(--muted);
+      font-size: 14.5px;
+      margin-top: 6px;
+      max-width: 62ch;
+    }
+
+    /* ---------- Cards & boxes ---------- */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .info-card {
+      background: var(--accent-bg, var(--navy-bg));
+      border: 1px solid color-mix(in srgb, var(--accent, var(--navy)) 35%, transparent);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    .info-card div {
+      margin: 3px 0;
+    }
+
+    .info-card b {
+      color: var(--accent, var(--navy));
+    }
+
+    .attention {
+      background: var(--amber-bg);
+      border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+      border-radius: 12px;
+      padding: 13px 16px;
+      margin: 16px 0;
+      font-size: 14px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .attention b {
+      color: var(--amber);
+    }
+
+    /* ---------- Pills / subtabs ---------- */
+    .pillrow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      border: 1px solid var(--line-strong);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .pill.active {
+      background: var(--solid-bg);
+      border-color: var(--solid-bg);
+      color: var(--solid-ink);
+      font-weight: 600;
+    }
+
+    /* ---------- Checklist ---------- */
+    .checklist-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+
+    .checklist-head h3 {
+      font-size: 15.5px;
+      color: var(--accent, var(--navy));
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--muted);
+      flex: none;
+    }
+
+    .progress-bar {
+      width: 88px;
+      height: 6px;
+      border-radius: 99px;
+      background: var(--line);
+      border: 1px solid var(--line-strong);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent, var(--navy));
+      width: 0%;
+      transition: width .25s ease;
+    }
+
+    ul.checklist {
+      list-style: none;
+      margin: 0 0 6px;
+      padding: 0;
+    }
+
+    .doc-type {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-left: auto;
+      flex: none;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: .045em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border: 1px solid transparent;
+      box-shadow: 0 1px 2px rgba(20, 40, 70, .06)
+    }
+
+    .doc-type::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      flex: none;
+      background: currentColor;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, .65)
+    }
+
+    .doc-type.physical {
+      background: #eaf2ff;
+      border-color: #c8dcff;
+      color: #2456a6
+    }
+
+    .doc-type.digital {
+      background: #e7f8ef;
+      border-color: #bce8ce;
+      color: #167647
+    }
+
+    .doc-type.confirm {
+      background: #fff4df;
+      border-color: #f2d69a;
+      color: #94600a
+    }
+
+    @media(max-width:520px) {
+      .checklist li {
+        gap: 7px
+      }
+
+      .doc-type {
+        padding: 5px 7px;
+        font-size: 9px
+      }
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 4px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    ul.checklist li:last-child {
+      border-bottom: none;
+    }
+
+    ul.checklist input[type=checkbox] {
+      width: 17px;
+      height: 17px;
+      margin-top: 1px;
+      accent-color: var(--accent, var(--navy));
+      flex: none;
+      cursor: pointer;
+    }
+
+    ul.checklist label {
+      cursor: pointer;
+    }
+
+    ul.checklist li.checked label {
+      color: var(--muted);
+      text-decoration: line-through;
+      text-decoration-color: var(--line-strong);
+    }
+
+    .reset-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    /* ---------- Step timeline ---------- */
+    .timeline {
+      position: relative;
+      margin-top: 6px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      position: relative;
+      padding-bottom: 22px;
+    }
+
+    .step:last-child {
+      padding-bottom: 0;
+    }
+
+    .step-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--solid-bg);
+      color: var(--solid-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex: none;
+      z-index: 1;
+    }
+
+    .step-line {
+      position: absolute;
+      left: 16.5px;
+      top: 34px;
+      bottom: 0;
+      width: 2px;
+      background: var(--line-strong);
+    }
+
+    .step:last-child .step-line {
+      display: none;
+    }
+
+    .step-body {
+      padding-top: 4px;
+    }
+
+    .step-body h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 3px;
+      color: var(--ink);
+    }
+
+    .step-body p {
+      font-size: 13.6px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .step-body .mono {
+      font-family: ui-monospace, 'Courier New', monospace;
+      font-size: 12.5px;
+      background: var(--paper);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .step-imgs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+   
+
+    .step-imgs img:hover {
+      transform: translateY(-2px);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 12, 18, .9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 28px;
+      cursor: zoom-out;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      display: block;
+      max-width: 94vw;
+      max-height: 92vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+      background: #fff;
+      cursor: default;
+    }
+
+    .step-imgs img, .gallery img, .fig img {
+      cursor: zoom-in;
+    }
+
+    .lightbox { cursor: zoom-out; }
+
+    .lightbox-close {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      color: #fff;
+      font-size: 28px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .fig-caption {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* ---------- Flow grid (overview) ---------- */
+    .flowgrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .flowcard {
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+    }
+
+    .flowcard .step-num {
+      margin-bottom: 10px;
+    }
+
+    .flowcard h4 {
+      font-size: 14.5px;
+      margin: 0 0 4px;
+      font-weight: 700;
+    }
+
+    .flowcard p {
+      font-size: 12.8px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 18px 0 26px;
+    }
+
+    .legend-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--navy-bg);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--brand);
+      border: 1px solid var(--line);
+    }
+
+    .legend-pill .ico {
+      font-size: 17px;
+    }
+
+    /* Contacts table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.6px;
+    }
+
+    th {
+      text-align: left;
+      background: var(--solid-bg);
+      color: #fff;
+      padding: 9px 12px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    tr:nth-child(even) td {
+      background: var(--navy-bg);
+    }
+
+    a.mailto {
+      color: var(--navy);
+      text-decoration: none;
+      border-bottom: 1px dotted currentColor;
+    }
+
+    .toc-index {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 14px;
+      font-size: 14px;
+    }
+
+    .toc-index button {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--navy);
+      background: var(--navy-bg);
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .toc-index button::after {
+      content: "→";
+      color: var(--navy);
+      flex: none;
+    }
+
+    .toc-index button:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .toc-index button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    footer {
+      padding: 22px clamp(16px, 4vw, 46px);
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width:820px) {
+      .shell {
+        flex-direction: column;
+      }
+
+      nav.rail {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding: 10px 10px;
+        gap: 2px;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .rail-group-label {
+        display: none;
+      }
+
+      .tab {
+        width: auto;
+        white-space: nowrap;
+        margin: 0;
+        border-radius: 999px;
+      }
+
+      .tab.active {
+        transform: none;
+      }
+
+      .tab.active::after {
+        display: none;
+      }
+
+      .flowgrid {
+        grid-template-columns: 1fr;
+      }
+
+      .legend-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toc-index {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="">BI<br>268</div>
+      <div class="brand-text">
+        <h1>Fluxo Operacional - Autorizações</h1><span>Município de Jandira · BI268</span>
+      </div>
+    </div>
+    <div class="topbar-right"><button class="" id=""></button></div>
+  </div>
+  <div class="shell">
+    <nav class="rail" id="rail">
+      <div class="rail-group-label">Início</div><button class="tab active" data-tab="overview"><span
+          class="ico">🧭</span>Visão geral</button><button class="tab" data-tab="contatos"><span
+          class="ico">📇</span>Contatos</button>
+      <div class="rail-group-label">Prefeitura</div><button class="tab" data-tab="rede"><span
+          class="ico">🏛️</span>Rede</button><button class="tab" data-tab="ramal"><span
+          class="ico">🛣️</span>Ramal</button><button class="tab" data-tab="manutencao"><span
+          class="ico">🔧</span>Manutenção</button><button class="tab" data-tab="prorrog"><span
+          class="ico">⏳</span>Prorrogação</button>
+      <div class="rail-group-label">Encerramento</div><button class="tab" data-tab="encerramento"><span
+          class="ico">🏁</span>Encerramento de Obras</button><button class="tab" data-tab="cancelamento"><span
+          class="ico">✕</span>Cancelamento</button><button class="tab" data-tab="info"><span
+          class="ico">🗂️</span>Informações e registros</button>
+    </nav>
+    <main class="panel">
+      <section class="page active" id="page-overview">
+        <div class="page-head">
+          <div class="kicker">COMO USAR ESTE FLUXO</div>
+          <h2>Autorizações em Jandira</h2>
+          <p class="sub">Fluxo de autorizações da Prefeitura de Jandira para Rede, Ramal e Manutenção, incluindo
+            prorrogação, comunique-se e cancelamento. Use as abas para consultar documentação e etapas de cada
+            solicitação.</p>
+        </div>
+        <div class="legend-grid">
+          <div class="legend-pill"><span class="ico">🏛️</span>Prefeitura de Jandira</div>
+          <div class="legend-pill"><span class="ico">📄</span>Protocolo físico</div>
+          <div class="legend-pill"><span class="ico">🔄</span>Correções via LECOM</div>
+          <div class="legend-pill"><span class="ico">✕</span>Cancelamento</div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:12px;">Fluxo macro — autorizações</h3>
+          <div class="flowgrid" id="flowgrid"></div>
+        </div>
+        <div class="">
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:10px;">Onde encontrar cada coisa</h3>
+          <div class="toc-index"><button data-goto="contatos">Contatos dos órgãos e e-mails</button><button
+              data-goto="rede">Documentação e protocolo — Rede</button><button data-goto="ramal">Documentação e
+              protocolo — Ramal</button><button data-goto="manutencao">Documentação e protocolo —
+              Manutenção</button><button data-goto="prorrog">Como pedir prorrogação</button><button
+              data-goto="cancelamento">Como cancelar um processo</button></div>
+        </div>
+      </section>
+      <section class="page" id="page-contatos">
+        <div class="page-head">
+          <div class="kicker">CONTATOS</div>
+          <h2>Contatos dos órgãos — Jandira</h2>
+          <p class="sub">Contatos indicados no procedimento de autorizações do município.</p>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <table id="contactsTable"></table>
+        </div>
+      </section>
+      <section class="page" id="page-rede">
+        <div class="page-head">
+          <div class="kicker">PREFEITURA DE JANDIRA</div>
+          <h2>Rede</h2>
+          <p class="sub">Autorização para implantação de rede — protocolo físico na Prefeitura.</p>
+        </div>
+        <div class="info-card">
+          <div><b>Endereço:</b> Rua Elton Silva, 1000 — Centro, Jandira - SP, 06600-025</div>
+          <div><b>Setor:</b> Secretaria de Habitação e Planejamento</div>
+        </div>
+        <div class="card">
+          <div class="checklist-head">
+            <div>
+              <h3>Documentação necessária</h3>
+            </div>
+            <div class="progress-wrap"><span id="redeLabel">0/0</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="redeFill"></div>
+              </div><button class="reset-btn" data-reset="rede">limpar</button>
+            </div>
+          </div>
+          <ul class="checklist" id="redeChecklist"></ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:12px;">Passo a passo</h3>
+          <div class="timeline" id="redeSteps"></div>
+        </div>
+      </section>
+      <section class="page" id="page-ramal">
+        <div class="page-head">
+          <div class="kicker">PREFEITURA DE JANDIRA</div>
+          <h2>Ramal</h2>
+          <p class="sub">Autorização para implantação de ramal. Trâmite liberado via LECOM.</p>
+        </div>
+        <div class="info-card">
+          <div><b>Endereço:</b> Rua Elton Silva, 1000 — Centro, Jandira - SP, 06600-025</div>
+          <div><b>Setor:</b> Secretaria de Habitação e Planejamento</div>
+        </div>
+        <div class="card">
+          <div class="checklist-head">
+            <div>
+              <h3>Documentação necessária</h3>
+            </div>
+            <div class="progress-wrap"><span id="ramalLabel">0/0</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="ramalFill"></div>
+              </div><button class="reset-btn" data-reset="ramal">limpar</button>
+            </div>
+          </div>
+          <ul class="checklist" id="ramalChecklist"></ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:12px;">Passo a passo</h3>
+          <div class="timeline" id="ramalSteps"></div>
+        </div>
+      </section>
+      <section class="page" id="page-manutencao">
+        <div class="page-head">
+          <div class="kicker">PREFEITURA DE JANDIRA</div>
+          <h2>Manutenção</h2>
+          <p class="sub">Autorização para manutenção. Trâmite liberado via LECOM.</p>
+        </div>
+        <div class="info-card">
+          <div><b>Endereço:</b> Rua Elton Silva, 1000 — Centro, Jandira - SP, 06600-025</div>
+          <div><b>Setor:</b> Secretaria de Habitação e Planejamento</div>
+        </div>
+        <div class="card">
+          <div class="checklist-head">
+            <div>
+              <h3>Documentação necessária</h3>
+            </div>
+            <div class="progress-wrap"><span id="manutencaoLabel">0/0</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="manutencaoFill"></div>
+              </div><button class="reset-btn" data-reset="manutencao">limpar</button>
+            </div>
+          </div>
+          <ul class="checklist" id="manutencaoChecklist"></ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:12px;">Passo a passo</h3>
+          <div class="timeline" id="manutencaoSteps"></div>
+        </div>
+      </section>
+      <section class="page" id="page-prorrog">
+        <div class="page-head">
+          <div class="kicker">PREFEITURA DE JANDIRA</div>
+          <h2>Prorrogação</h2>
+          <p class="sub">Verificar primeiro com o Analista se é possível seguir com a solicitação.</p>
+        </div>
+        <div class="card">
+          <div class="checklist-head">
+            <div>
+              <h3>Documentação necessária</h3>
+            </div>
+            <div class="progress-wrap"><span id="prorrogLabel">0/0</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="prorrogFill"></div>
+              </div><button class="reset-btn" data-reset="prorrog">limpar</button>
+            </div>
+          </div>
+          <ul class="checklist" id="prorrogChecklist"></ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:12px;">Passo a passo</h3>
+          <div class="timeline" id="prorrogSteps"></div>
+        </div>
+      </section>
+      <section class="page" id="page-encerramento">
+        <div class="page-head">
+          <div class="kicker">ENCERRAMENTO</div>
+          <h2>Encerramento de Obras</h2>
+          <p class="sub">Procedimento de encerramento de obras em Jandira (Contrato BI268 · Comgás · RMSP)</p>
+        </div>
+        <div class="attention"><span>⚠️</span>
+          <div><b>Ponto-chave:</b> Jandira não emite CCO (Certificado de Conclusão de Obra). A obra é considerada
+            encerrada com o protocolo físico de encerramento, entregue diretamente na Secretaria de Obras, e com o
+            arquivamento da documentação. Rede, Ramal e Manutenção devem ser encerrados formalmente.</div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:12px;">1. Onde e como protocolar</h3>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Informação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Órgão / setor</td>
+                  <td>Prefeitura de Jandira — Secretaria de Obras (Setor de Protocolo)<br>Rua Elton Silva, 1000 –
+                    Centro, Jandira/SP, 06600-025</td>
+                </tr>
+                <tr>
+                  <td>Contato</td>
+                  <td>Inácio — Secretaria de Obras · (11) 4619-8200</td>
+                </tr>
+                <tr>
+                  <td>Forma de entrega</td>
+                  <td>Protocolo físico — entregar diretamente na Secretaria de Obras (presencial)</td>
+                </tr>
+                <tr>
+                  <td>Documentação impressa</td>
+                  <td>Disponibilizada na EXPEDIÇÃO (CO – Ipiranga)</td>
+                </tr>
+                <tr>
+                  <td>Anexar ao protocolo</td>
+                  <td>Cópia da procuração BV e cópia da CNH, junto à documentação de encerramento</td>
+                </tr>
+                <tr>
+                  <td>Aceite</td>
+                  <td>A Secretaria de Obras assina a Carta de Requerimento; o documento assinado comprova a conclusão da
+                    obra</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <h3 style="font-size:15px;margin:18px 0 10px;">2. Documentação necessária por tipo de obra</h3>
+        <div class="card" data-enc-list="enc-rede">
+          <div class="checklist-head">
+            <div>
+              <h3>REDE — encerramento formal obrigatório (protocolo físico)</h3>
+            </div>
+            <div class="progress-wrap"><span class="enc-label">0/7</span>
+              <div class="progress-bar">
+                <div class="progress-fill enc-fill"></div>
+              </div><button class="reset-btn enc-reset">limpar</button>
+            </div>
+          </div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="enc-rede-0"><label for="enc-rede-0">Carta Requerimento informando o
+                encerramento da obra</label><span class="doc-type physical">2 vias</span></li>
+            <li><input type="checkbox" id="enc-rede-1"><label for="enc-rede-1">Procuração</label><span
+                class="doc-type physical">1 via</span></li>
+            <li><input type="checkbox" id="enc-rede-2"><label for="enc-rede-2">ART de execução
+                (Empreiteira)</label><span class="doc-type physical">1 via</span></li>
+            <li><input type="checkbox" id="enc-rede-3"><label for="enc-rede-3">As Built – PDF e DWG (assinados pela
+                contratada e pela Comgás)</label><span class="doc-type physical">1 via</span></li>
+            <li><input type="checkbox" id="enc-rede-4"><label for="enc-rede-4">Relatório Fotográfico</label><span
+                class="doc-type physical">1 via</span></li>
+            <li><input type="checkbox" id="enc-rede-5"><label for="enc-rede-5">Cópia da autorização</label><span
+                class="doc-type physical">1 via</span></li>
+            <li><input type="checkbox" id="enc-rede-6"><label for="enc-rede-6">CD (todos os arquivos – em PDF e
+                DWG)</label><span class="doc-type physical">1 via</span></li>
+          </ul>
+          <p class="sub" style="font-size:12.5px">Os Lecoms devem ser enviados pelo Facilita PX e, em último caso, por
+            e-mail (enquanto o Facilita PX não é regularizado).</p>
+            <div class="step-imgs"><img class="tall" src="nathan/DOCUMENTAÇÃO - REDE, RAMAL E MANU.png"
+                  alt="Figura 8 — Modelo de autorização do Demutran para ramais"></div>
+              <div class="fig-caption">Modelo de carta requerimento.</div>
+        </div>
+        <div class="card" data-enc-list="enc-ramal">
+          <div class="checklist-head">
+            <div>
+              <h3>RAMAL — encerramento formal obrigatório</h3>
+            </div>
+            <div class="progress-wrap"><span class="enc-label">0/3</span>
+              <div class="progress-bar">
+                <div class="progress-fill enc-fill"></div>
+              </div><button class="reset-btn enc-reset">limpar</button>
+            </div>
+          </div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="enc-ramal-0"><label for="enc-ramal-0">Carta Requerimento informando o
+                encerramento da obra</label><span class="doc-type physical">2 vias</span></li>
+            <li><input type="checkbox" id="enc-ramal-1"><label for="enc-ramal-1">Relatório Fotográfico</label><span
+                class="doc-type physical">1 via</span></li>
+            <li><input type="checkbox" id="enc-ramal-2"><label for="enc-ramal-2">Cópia da autorização</label><span
+                class="doc-type physical">1 via</span></li>
+          </ul>
+          <p class="sub" style="font-size:12.5px">Os Lecoms devem ser enviados pelo Facilita PX e, em último caso, por
+            e-mail (enquanto o Facilita PX não é regularizado).</p>
+            <div class="step-imgs"><img class="tall" src="nathan/DOCUMENTAÇÃO - REDE, RAMAL E MANU.png"
+                  alt="Figura 8 — Modelo de autorização do Demutran para ramais"></div>
+              <div class="fig-caption">Modelo de carta requerimento.</div>
+        </div>
+        <div class="card" data-enc-list="enc-manutencao">
+          <div class="checklist-head">
+            <div>
+              <h3>MANUTENÇÃO — encerramento formal obrigatório</h3>
+            </div>
+            <div class="progress-wrap"><span class="enc-label">0/3</span>
+              <div class="progress-bar">
+                <div class="progress-fill enc-fill"></div>
+              </div><button class="reset-btn enc-reset">limpar</button>
+            </div>
+          </div>
+          <ul class="checklist">
+            <li><input type="checkbox" id="enc-manutencao-0"><label for="enc-manutencao-0">Carta Requerimento informando
+                o encerramento da obra</label><span class="doc-type physical">2 vias</span></li>
+            <li><input type="checkbox" id="enc-manutencao-1"><label for="enc-manutencao-1">Relatório
+                Fotográfico</label><span class="doc-type physical">1 via</span></li>
+            <li><input type="checkbox" id="enc-manutencao-2"><label for="enc-manutencao-2">Cópia da
+                autorização</label><span class="doc-type physical">1 via</span></li>
+          </ul>
+          <p class="sub" style="font-size:12.5px">Os Lecoms devem ser enviados pelo Facilita PX e, em último caso, por
+            e-mail (enquanto o Facilita PX não é regularizado).</p>
+            <div class="step-imgs"><img class="tall" src="nathan/DOCUMENTAÇÃO - REDE, RAMAL E MANU.png"
+                  alt="Figura 8 — Modelo de autorização do Demutran para ramais"></div>
+              <div class="fig-caption">Modelo de carta requerimento.</div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:12px;">3. Passo a passo</h3>
+          <div class="timeline">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-line"></div>
+              <div class="step-body">
+                <h4>Vigência</h4>
+                <p>Monitorar vencimento das autorizações e prorrogações; pedir documentos atualizados às contratadas
+                  após o vencimento.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-line"></div>
+              <div class="step-body">
+                <h4>Recebimento</h4>
+                <p>Documentos chegam por Lecom, Facilita PX e EXPEDIÇÃO (CO – Ipiranga); confirmar o recebimento em cada
+                  plataforma.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-line"></div>
+              <div class="step-body">
+                <h4>Conferência</h4>
+                <p>Conferir pelos critérios da <a href="https://comgas.docnix.com.br/comgas/corporate/index.html#/login" target="_blank">IN 528</a>: documentos obrigatórios enviados, completos, legíveis e
+                  assinados. Se OK, registrar o protocolo; se não, devolver pelo mesmo canal pedindo correção
+                  específica.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div class="step-line"></div>
+              <div class="step-body">
+                <h4>Protocolo</h4>
+                <p>Entregar a documentação completa e revisada, presencialmente, na Secretaria de Obras (com procuração
+                  BV e CNH). Obter a assinatura na Carta de Requerimento e acompanhar o andamento junto à Prefeitura.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">5</div>
+              <div class="step-line"></div>
+              <div class="step-body">
+                <h4>Comunique-se</h4>
+                <p>Se a PM pedir correção/complementação da recomposição: enviar imediatamente à contratada por e-mail,
+                  com cópia ao eng. de construção Comgás do segmento, e com prazo; conferir a devolutiva; responder à PM
+                  por ofício de atendimento ao Comunique-se.</p>
+                  <div class="step-imgs"><img class="tall" src="nathan/COMUNIQUE-SE.png"
+                  alt="Figura 8 — Modelo de autorização do Demutran para ramais"></div>
+              <div class="fig-caption">Modelo de comunique-se.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">6</div>
+              <div class="step-line"></div>
+              <div class="step-body">
+                <h4>Conclusão</h4>
+                <p>Após o protocolo, atualizar o status para “Processo Encerrado” na planilha de governança. Fulcrum,
+                  atualizar com todas as documentações recebidas e comprovante de protocolo. No Lecom, avançar com o
+                  comprovante de protocolo. Conferir que tudo foi registrado antes de avançar o status.</p>
+                  <div class="step-imgs"><img class="tall" src="nathan/PROCESSO ENCERRADO.png"
+                  alt="Figura 8 — Modelo de autorização do Demutran para ramais"></div>
+              
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">7</div>
+              <div class="step-body">
+                <h4>Arquivamento</h4>
+                <p>Arquivar toda a documentação de forma organizada. Digitalizar a Carta de Requerimento assinada pela
+                  Prefeitura e anexá-la nos sistemas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:10px;">4. Prazos</h3>
+          <ul class="checklist">
+            <li style="border:none"><b>Protocolo físico:</b> 5 dias úteis após a entrega completa da documentação.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:10px;">5. Cancelamento / arquivamento</h3>
+          <p class="sub" style="font-size:13.5px">Deve ser feito antes de qualquer necessidade de protocolo junto ao
+            órgão público.</p>
+          <ul class="checklist">
+            <li style="border:none">Elaborar carta de cancelamento ou arquivamento, justificando o motivo, e protocolar
+              na PM por e-mail.</li>
+            <li style="border:none">A Comgás é responsável pelo envio da justificativa (e-mail ou outro canal oficial).
+            </li>
+            <li style="border:none">Registrar a carta nos sistemas internos BV e Comgás para evitar pendências.</li>
+         <div class="step-imgs"><img class="tall" src="nathan/CANCELAMENTO.png"
+                  alt="Figura 8 — Modelo de autorização do Demutran para ramais"></div>
+              <div class="fig-caption">Modelo de cancelamento.</div>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:10px;">6. Atenção</h3>
+          <ul class="checklist">
+            <li style="border:none">Jandira não gera CCO: o encerramento se dá pelo protocolo de encerramento e pelo
+              arquivamento da documentação.</li>
+            <li style="border:none">Ramal e Manutenção também exigem encerramento formal em Jandira.</li>
+            <li style="border:none">O protocolo é físico: a documentação deve estar completa e revisada antes da
+              entrega, para evitar recusas ou atrasos.</li>
+            <li style="border:none">Registrar todos os envios e respostas nos sistemas internos, para auditoria.</li>
+            <li style="border:none">O procedimento vale para todas as equipes BV responsáveis por encerramento de obras.
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="page" id="page-cancelamento">
+        <div class="page-head">
+          <div class="kicker">ENCERRAMENTO</div>
+          <h2>Cancelamento</h2>
+          <p class="sub">Para cancelar um processo, confirme por telefone se o procedimento deve ser digital ou
+            presencial.</p>
+        </div>
+        <div class="info-card">
+          <div><b>Telefone:</b> (11) 4619-8200</div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:10px;">Documentação necessária</h3>
+          <ul class="checklist">
+            <li><input type="checkbox" id="cancel-doc"><label for="cancel-doc">Carta requerimento solicitando
+                cancelamento</label><span class="doc-type confirm">Confirmar via</span></li>
+          </ul>
+          <p class="sub" style="font-size:12px">Caso haja necessidade de realizar cancelamento de algum processo,
+            verificar por telefone qual a forma que desejam: se digital ou presencialmente.</p>
+        </div>
+      </section>
+      <section class="page" id="page-info">
+        <div class="page-head">
+          <div class="kicker">REGISTROS</div>
+          <h2>Informações importantes</h2>
+        </div>
+        <div class="attention"><span>⚠️</span>
+          <div>Toda e qualquer mudança no processo descrito neste procedimento deve ser imediatamente revisada, assim
+            como a respectiva IN no sistema Integra.</div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:10px;">Referências</h3>
+          <ul class="checklist">
+            <li style="border:none">Integração do Contrato BI268</li>
+            <li style="border:none">Manual de Licenças e Autorizações BI268</li>
+            <li style="border:none">P-8100100 – BI268 - Plano de Gestão do Contrato COMGÁS Licenças e Autorizações</li>
+            <li style="border:none">Integra COMGÁS – IN – 434 – Autorização de obra JANDIRA</li>
+            <li style="border:none">Integra COMGÁS – IN – 528 – Encerramento de obra JANDIRA</li>
+          </ul>
+        </div>
+        <div class="card" style="font-size:12.5px;color:var(--muted)">Baseado no documento “Passo a passo — BU268 —
+          Jandira” (Rev. 00, 07/07/2025).</div>
+      </section>
+    </main>
+  </div>
+  <footer>Fluxo Operacional - Visual e Interativo · Contrato BI268 · Jandira/SP</footer>
+  <div class="lightbox" id="lightbox"><button class="lightbox-close" id="lightboxClose">✕</button><img id="lightboxImg"
+      src="" alt="Imagem ampliada"></div>
+
+  <script>
+    (function () {
+      const lists = {
+        rede: ["Carta Requerimento", "Projeto Executivo", "Memorial Descritivo com assinatura do responsável pelo projeto", "Cronograma", "Projeto de sinalização", "ART Específica — Responsável Comgás", "ART Específica — Responsável Empreiteira", "ART Específica — Responsável Projetista", "Taxa do protocolo (paga diretamente na Prefeitura na abertura)", "Cópia da procuração BV", "Documento do representante BV"],
+        ramal: ["Requerimento padrão solicitando autorização", "Nota de ramal", "Croqui de localização", "Projeto de sinalização", "Cronograma de obras", "Memorial descritivo", "Relatório fotográfico", "ART Executante — específica", "ART Comgás", "Cópia da procuração Bureau Veritas", "Documento do técnico BV"],
+        manutencao: ["Requerimento solicitando autorização", "Croqui de localização", "Memorial descritivo", "Projeto de sinalização", "Cronograma de obras", "Relatório fotográfico", "Cópia da procuração", "Documento do técnico", "ART Executante", "ART Comgás"],
+        prorrog: ["Carta Requerimento", "Autorização anterior", "Novo cronograma"]
+      };
+      const steps = [
+        ["Conferência da documentação", "Se estiver de acordo, dar andamento ao protocolo. Caso contrário, retornar o LECOM solicitando a documentação corrigida."],
+        ["Protocolo físico", "A abertura do processo é realizada no guichê de PROTOCOLO, no prédio da Prefeitura. Há taxa de protocolo paga no local."],
+        ["Acompanhamento do processo", "Consultar o processo e contatar o órgão por telefone ou pela central de atendimento da Prefeitura."],
+        ["Pagamento da taxa de emissão", "Antes da emissão da autorização, o técnico será contatado por e-mail para retirar presencialmente o boleto. O comprovante pode ser enviado por e-mail."],
+        ["Comunique-se (se houver)", "Encaminhar a solicitação aos responsáveis da Comgás (projetista/engenharia) via LECOM. Após receber a documentação corrigida, conferir e juntar os documentos; confirmar se a entrega deve ser física ou por e-mail."],
+        ["Retirada e assinatura do alvará", "Após a liberação, comparecer presencialmente à Prefeitura para retirar e assinar a autorização."]
+      ];
+      const contatos = [["Inácio", "Diretoria de Gestão de Serviços Concessionários", "gerenciadeconcessao@jandira.sp.gov.br", "(11) 4619-8200"], ["Max Constantino", "Chefe de Divisão — Demutran", "demutran@jandira.sp.gov.br", "(11) 95799-9158"]];
+      const flow = [["1", "Conferir documentação", "Documentos corretos seguem para protocolo físico."], ["2", "Protocolar na Prefeitura", "Abertura no guichê de protocolo e pagamento da taxa local."], ["3", "Acompanhar o processo", "Contato com o órgão e acompanhamento de eventuais taxas."], ["4", "Tratar comunique-se", "Solicitar correções via LECOM e reunir a documentação corrigida."], ["5", "Retirar e assinar", "Retirada presencial da autorização na Prefeitura."], ["!", "Atualizar registros", "Digitalizar a autorização e lançar no Fulcrum e LECOM; enviar aos responsáveis."]];
+      const root = document.documentElement;
+      document.getElementById('flowgrid').innerHTML = flow.map(f => `<div class="flowcard" style="background:var(--navy-bg);border-color:transparent"><div class="step-num">${f[0]}</div><h4>${f[1]}</h4><p>${f[2]}</p></div>`).join('');
+      document.getElementById('contactsTable').innerHTML = '<thead><tr><th>Nome</th><th>Cargo</th><th>E-mail</th><th>Telefone</th></tr></thead><tbody>' + contatos.map(c => `<tr><td>${c[0]}</td><td>${c[1]}</td><td><a class="mailto" href="mailto:${c[2]}">${c[2]}</a></td><td>${c[3]}</td></tr>`).join('') + '</tbody>';
+      function renderList(k) { const ul = document.getElementById(k + 'Checklist'); ul.innerHTML = lists[k].map((s, i) => `<li><input type="checkbox" id="${k}-${i}"><label for="${k}-${i}">${s}</label><span class="doc-type physical">Físico</span></li>`).join(''); const update = () => { let n = ul.querySelectorAll('input:checked').length, t = lists[k].length; document.getElementById(k + 'Label').textContent = n + '/' + t; document.getElementById(k + 'Fill').style.width = (n / t * 100) + '%'; ul.querySelectorAll('li').forEach(li => li.classList.toggle('checked', li.querySelector('input').checked)); }; ul.addEventListener('change', update); document.querySelector(`[data-reset="${k}"]`).addEventListener('click', () => { ul.querySelectorAll('input').forEach(x => x.checked = false); update(); }); update(); }
+      function renderSteps(id, arr) { document.getElementById(id + 'Steps').innerHTML = arr.map((s, i) => `<div class="step"><div class="step-num">${i + 1}</div>${i < arr.length - 1 ? '<div class="step-line"></div>' : ''}<div class="step-body"><h4>${s[0]}</h4><p>${s[1]}</p></div></div>`).join(''); }
+      ['rede', 'ramal', 'manutencao', 'prorrog'].forEach(k => renderList(k));
+      ['rede', 'ramal', 'manutencao'].forEach(k => renderSteps(k, steps));
+      renderSteps('prorrog', [["Confirmar com o Analista", "Verificar primeiro se é possível seguir com a solicitação."], ["Comunique-se (se houver)", "Encaminhar aos responsáveis Comgás via LECOM. Após receber os documentos corrigidos, conferir e confirmar se a entrega será física ou por e-mail."], ["Retirada da prorrogação", "A autorização é liberada na Prefeitura e deve ser retirada pessoalmente na Secretaria de Habitação."]]);
+      document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t)); document.querySelectorAll('.page').forEach(x => x.classList.toggle('active', x.id === 'page-' + t.dataset.tab)); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
+      document.querySelectorAll('[data-goto]').forEach(b => b.addEventListener('click', () => document.querySelector(`[data-tab="${b.dataset.goto}"]`).click()));
+      document.getElementById('themeToggle').addEventListener('click', () => root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+    })();
+  </script>
+  <script>
+    document.querySelectorAll('[data-enc-list]').forEach(function (card) {
+      var boxes = [].slice.call(card.querySelectorAll('input[type=checkbox]'));
+      function update() {
+        var n = 0;
+        boxes.forEach(function (b) { b.closest('li').classList.toggle('checked', b.checked); if (b.checked) n++; });
+        card.querySelector('.enc-label').textContent = n + '/' + boxes.length;
+        card.querySelector('.enc-fill').style.width = (boxes.length ? n / boxes.length * 100 : 0) + '%';
+      }
+      boxes.forEach(function (b) { b.addEventListener('change', update); });
+      card.querySelector('.enc-reset').addEventListener('click', function () { boxes.forEach(function (b) { b.checked = false; }); update(); });
+    });
+  </script>
+
+  <script>
+    // Ampliação das imagens: clique para abrir, clique fora ou Esc para fechar.
+    (function () {
+      const lightbox = document.getElementById('lightbox');
+      const enlarged = document.getElementById('lightboxImg');
+      const closeButton = document.getElementById('lightboxClose');
+      if (!lightbox || !enlarged) return;
+
+      function openImage(img) {
+        enlarged.src = img.currentSrc || img.src;
+        enlarged.alt = img.alt || 'Imagem ampliada';
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeImage() {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        enlarged.removeAttribute('src');
+      }
+
+      document.addEventListener('click', function (event) {
+        const img = event.target.closest('.step-imgs img, .gallery img, .fig img');
+        if (img) {
+          openImage(img);
+          return;
+        }
+        if (event.target.closest('#lightboxClose')) closeImage();
+      });
+
+      lightbox.addEventListener('click', function (event) {
+        if (event.target === lightbox) closeImage();
+      });
+
+      if (closeButton) closeButton.setAttribute('aria-label', 'Fechar imagem ampliada');
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && lightbox.classList.contains('open')) closeImage();
+      });
+
+      lightbox.setAttribute('aria-hidden', 'true');
+    })();
+  </script>
+
+</body>
+
+</html>
